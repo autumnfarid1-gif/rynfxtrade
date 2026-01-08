@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kopi Insight - Cabang Soreang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4A2C2A;
+            --secondary: #D4A55A;
+            --accent: #8B4513;
+            --light: #F5F1EB;
+            --dark: #2C1810;
+            --gray: #6B7280;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(74, 44, 42, 0.8), rgba(74, 44, 42, 0.9)), 
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 5%;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .rating-stars {
+            color: var(--secondary);
+        }
+
+        .rating-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #c89540;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary);
+        }
+
+        /* Info Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .info-card p {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Menu Section */
+        .menu-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .menu-tab {
+            padding: 0.7rem 1.5rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .menu-tab.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .menu-tab:hover:not(.active) {
+            background-color: #f9f9f9;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item-img {
+            height: 180px;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .menu-item-content {
+            padding: 1.5rem;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .menu-item-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .menu-item-price {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .menu-item-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .menu-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-item-rating {
+            color: var(--secondary);
+        }
+
+        .add-to-cart {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #c89540;
+        }
+
+        /* Map Section */
+        #map-section {
+            padding: 0 5%;
+        }
+
+        #map-container {
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .map-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .map-details {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .map-details h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .map-details p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-details i {
+            color: var(--secondary);
+            width: 20px;
+        }
+
+        .map-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Hours Section */
+        .hours-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hours-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .hours-table tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        .hours-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .hours-table td {
+            padding: 1rem 0;
+        }
+
+        .hours-table td:first-child {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .hours-table td:last-child {
+            text-align: right;
+            color: var(--gray);
+        }
+
+        .hours-table .today {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 5% 1.5rem;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h3 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-col p {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-col ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--secondary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-img {
+            height: 200px;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary);
+                flex-direction: column;
+                padding: 1rem 0;
+                text-align: center;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-coffee"></i>
+                <h1>Kopi <span>Insight</span></h1>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="#home">Beranda</a></li>
+                    <li><a href="#about">Tentang</a></li>
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#location">Lokasi</a></li>
+                    <li><a href="#hours">Jam Buka</a></li>
+                    <li><a href="#contact">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Kopi Insight Cabang Soreang</h2>
+            <p>Nikmati pengalaman ngopi terbaik dengan racikan khusus dari biji kopi pilihan. Tempat yang nyaman untuk bekerja, berkumpul, atau sekadar menikmati waktu santai.</p>
+            
+            <div class="rating">
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="rating-value">4.9</div>
+                <div class="rating-text">(128 Ulasan)</div>
+            </div>
+            
+            <div class="hero-btns">
+                <button class="btn btn-primary" id="viewMenuBtn">Lihat Menu</button>
+                <button class="btn btn-secondary" id="directionBtn">
+                    <i class="fas fa-directions"></i> Petunjuk Arah
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Info Section -->
+        <section id="about">
+            <h2 class="section-title">Tentang Kopi Insight</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Lokasi Strategis</h3>
+                    <p>Dekat, Jl. Raya Soreang - Banjaran No.10-319, Soreang, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40911</p>
+                    <p>Mudah dijangkau dari mana saja di area Soreang dan sekitarnya.</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Jam Operasional</h3>
+                    <p>Buka setiap hari pukul 10:00 - 00:00</p>
+                    <p>Perfect untuk ngopi pagi, meeting siang, atau nongkrong malam hari.</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-mug-hot"></i>
+                    <h3>Kopi Spesial</h3>
+                    <p>Menawarkan berbagai jenis kopi dari biji pilihan, baik manual brew maupun espresso based.</p>
+                    <p>Juga tersedia makanan ringan dan camilan untuk teman ngopi Anda.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section id="menu">
+            <h2 class="section-title">Menu Kami</h2>
+            
+            <div class="menu-tabs">
+                <button class="menu-tab active" data-category="all">Semua</button>
+                <button class="menu-tab" data-category="coffee">Kopi</button>
+                <button class="menu-tab" data-category="non-coffee">Non-Kopi</button>
+                <button class="menu-tab" data-category="food">Makanan</button>
+                <button class="menu-tab" data-category="snack">Snack</button>
+            </div>
+            
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Map & Location Section -->
+        <section id="location">
+            <h2 class="section-title">Lokasi & Peta</h2>
+            
+            <div id="map-section">
+                <div id="map-container"></div>
+                
+                <div class="map-info">
+                    <div class="map-details">
+                        <h3>Kopi Insight Cabang Soreang</h3>
+                        <p><i class="fas fa-map-pin"></i> Dekat, Jl. Raya Soreang - Banjaran No.10-319, Soreang, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40911</p>
+                        <p><i class="fas fa-phone"></i> +62 851-7327-4411</p>
+                        <p><i class="fas fa-clock"></i> Buka: Setiap hari 10:00 - 00:00</p>
+                        <p><i class="fas fa-star"></i> Rating: 4.9 (128 ulasan)</p>
+                    </div>
+                    
+                    <div class="map-actions">
+                        <button class="btn btn-primary" id="openMapBtn">
+                            <i class="fas fa-external-link-alt"></i> Buka di Google Maps
+                        </button>
+                        <button class="btn btn-secondary" id="callBtn">
+                            <i class="fas fa-phone"></i> Telepon Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hours Section -->
+        <section id="hours">
+            <h2 class="section-title">Jam Operasional</h2>
+            
+            <div class="hours-container">
+                <table class="hours-table">
+                    <tbody id="hoursTable">
+                        <!-- Hours will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>Kopi Insight Soreang</h3>
+                    <p>Tempat ngopi yang nyaman dengan suasana yang cozy dan musik yang santai. Cocok untuk bekerja, meeting, atau sekadar bersantai.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Kontak Kami</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Jl. Raya Soreang - Banjaran No.10-319, Soreang, Bandung</p>
+                    <p><i class="fas fa-phone"></i> +62 851-7327-4411</p>
+                    <p><i class="fas fa-envelope"></i> info@kopiinsight.soreang.id</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Link Cepat</h3>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#location">Lokasi</a></li>
+                        <li><a href="#hours">Jam Buka</a></li>
+                        <li><a href="#about">Tentang Kami</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Kopi Insight Soreang. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for menu item details -->
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-img" id="modalImg"></div>
+            <h2 id="modalTitle"></h2>
+            <div class="menu-item-header">
+                <div class="menu-item-price" id="modalPrice"></div>
+                <div class="menu-item-rating" id="modalRating"></div>
+            </div>
+            <p id="modalDesc"></p>
+            <div style="margin-top: 1.5rem;">
+                <button class="add-to-cart" style="width: 100%; padding: 1rem;">Tambahkan ke Keranjang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+        
+        // Menu data
+        const menuItems = [
+            {
+                id: 1,
+                name: "Espresso",
+                category: "coffee",
+                price: "Rp 18.000",
+                description: "Kopi espresso murni dengan crema tebal dan rasa yang kuat.",
+                rating: 4.8,
+                img: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 2,
+                name: "Cappuccino",
+                category: "coffee",
+                price: "Rp 25.000",
+                description: "Perpaduan sempurna espresso, susu steamed, dan busa susu.",
+                rating: 4.9,
+                img: "https://images.unsplash.com/photo-1534778101976-62847782c213?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 3,
+                name: "Latte Art",
+                category: "coffee",
+                price: "Rp 28.000",
+                description: "Latte dengan seni di atasnya, tersedia berbagai pilihan gambar.",
+                rating: 4.7,
+                img: "https://images.unsplash.com/photo-1561047029-3000c68339ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 4,
+                name: "Cold Brew",
+                category: "coffee",
+                price: "Rp 30.000",
+                description: "Kopi sedding dingin selama 12 jam, menghasilkan rasa yang smooth.",
+                rating: 4.9,
+                img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 5,
+                name: "Matcha Latte",
+                category: "non-coffee",
+                price: "Rp 27.000",
+                description: "Perpaduan matcha Jepang berkualitas dengan susu steamed.",
+                rating: 4.6,
+                img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 6,
+                name: "Chocolate Mint",
+                category: "non-coffee",
+                price: "Rp 26.000",
+                description: "Minuman coklat dengan sentuhan segar daun mint.",
+                rating: 4.5,
+                img: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 7,
+                name: "Croissant",
+                category: "food",
+                price: "Rp 22.000",
+                description: "Croissant butter asli dengan tekstur lapis yang renyah.",
+                rating: 4.4,
+                img: "https://images.unsplash.com/photo-1555507036-ab794f27d2e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 8,
+                name: "Sandwich Club",
+                category: "food",
+                price: "Rp 35.000",
+                description: "Sandwich isian ayam, smoked beef, telur, sayuran dengan saus spesial.",
+                rating: 4.7,
+                img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 9,
+                name: "French Fries",
+                category: "snack",
+                price: "Rp 20.000",
+                description: "Kentang goreng renyah dengan saus pilihan.",
+                rating: 4.3,
+                img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 10,
+                name: "Chocolate Chip Cookies",
+                category: "snack",
+                price: "Rp 15.000",
+                description: "Cookie dengan choco chips yang lumer di mulut.",
+                rating: 4.8,
+                img: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            }
+        ];
+        
+        // Render menu items
+        const menuGrid = document.getElementById('menuGrid');
+        const menuTabs = document.querySelectorAll('.menu-tab');
+        
+        function renderMenuItems(category = 'all') {
+            menuGrid.innerHTML = '';
+            
+            const filteredItems = category === 'all' 
+                ? menuItems 
+                : menuItems.filter(item => item.category === category);
+            
+            filteredItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.dataset.id = item.id;
+                menuItem.dataset.category = item.category;
+                
+                // Generate star rating
+                let stars = '';
+                const fullStars = Math.floor(item.rating);
+                const hasHalfStar = item.rating % 1 !== 0;
+                
+                for (let i = 0; i < fullStars; i++) {
+                    stars += '<i class="fas fa-star"></i>';
+                }
+                
+                if (hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                }
+                
+                const remainingStars = 5 - Math.ceil(item.rating);
+                for (let i = 0; i < remainingStars; i++) {
+                    stars += '<i class="far fa-star"></i>';
+                }
+                
+                menuItem.innerHTML = `
+                    <div class="menu-item-img" style="background-image: url('${item.img}')"></div>
+                    <div class="menu-item-content">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">${item.name}</div>
+                            <div class="menu-item-price">${item.price}</div>
+                        </div>
+                        <div class="menu-item-desc">${item.description}</div>
+                        <div class="menu-item-footer">
+                            <div class="menu-item-rating">${stars} ${item.rating}</div>
+                            <button class="add-to-cart">+ Tambah</button>
+                        </div>
+                    </div>
+                `;
+                
+                menuGrid.appendChild(menuItem);
+                
+                // Add click event to open modal
+                menuItem.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('add-to-cart')) {
+                        openModal(item);
+                    }
+                });
+                
+                // Add to cart button
+                const addToCartBtn = menuItem.querySelector('.add-to-cart');
+                addToCartBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addToCart(item);
+                });
+            });
+        }
+        
+        // Menu tab functionality
+        menuTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                menuTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Get category and render items
+                const category = tab.dataset.category;
+                renderMenuItems(category);
+            });
+        });
+        
+        // Initialize menu
+        renderMenuItems();
+        
+        // Modal functionality
+        const modal = document.getElementById('itemModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalPrice = document.getElementById('modalPrice');
+        const modalRating = document.getElementById('modalRating');
+        const modalDesc = document.getElementById('modalDesc');
+        
+        function openModal(item) {
+            // Generate star rating for modal
+            let stars = '';
+            const fullStars = Math.floor(item.rating);
+            const hasHalfStar = item.rating % 1 !== 0;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            const remainingStars = 5 - Math.ceil(item.rating);
+            for (let i = 0; i < remainingStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            // Set modal content
+            modalImg.style.backgroundImage = `url('${item.img}')`;
+            modalTitle.textContent = item.name;
+            modalPrice.textContent = item.price;
+            modalRating.innerHTML = `${stars} ${item.rating}`;
+            modalDesc.textContent = item.description;
+            
+            // Show modal
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Add to cart function
+        function addToCart(item) {
+            // In a real application, this would add to cart
+            // For now, we'll just show an alert
+            alert(`${item.name} telah ditambahkan ke keranjang!`);
+            
+            // You could add actual cart functionality here
+            console.log(`Added to cart: ${item.name} - ${item.price}`);
+        }
+        
+        // Initialize map
+        function initMap() {
+            // Coordinates for Kopi Insight Soreang (approximate)
+            const cafeCoords = [-7.0380, 107.5300];
+            
+            // Create map
+            const map = L.map('map-container').setView(cafeCoords, 15);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).add

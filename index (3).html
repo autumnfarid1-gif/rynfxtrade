@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RynFX Trader - Komunitas Trading Profesional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a58ca;
+            --secondary: #1e3a8a;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #10b981;
+            --danger: #ef4444;
+            --gray: #64748b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--accent);
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            background: linear-gradient(rgba(10, 88, 202, 0.9), rgba(30, 58, 138, 0.9)), url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--dark);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .cta-button:hover {
+            background-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        .telegram-button {
+            background-color: #0088cc;
+            margin-left: 15px;
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .about-features {
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Trading Sections */
+        .trading-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .trading-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .trading-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .trading-card h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .trading-card h3 i {
+            color: var(--accent);
+        }
+        
+        /* XAUUSD Section */
+        .xau-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .xau-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-weight: 600;
+        }
+        
+        .xau-info {
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        .xau-info h3 {
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .xau-info ul {
+            list-style: none;
+        }
+        
+        .xau-info li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .xau-info li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* News & Money Management */
+        .news-mgmt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .news-card, .mgmt-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .news-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-date {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Join Section */
+        .join {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            text-align: center;
+        }
+        
+        .join h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .join p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #334155;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content, .xau-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .cta-button, .telegram-button {
+                display: block;
+                margin: 10px auto;
+                width: 90%;
+                max-width: 300px;
+            }
+            
+            section {
+                padding: 3rem 0;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <div class="logo-text">
+                    <h1>RynFX Trader</h1>
+                    <p>Komunitas Trading Profesional</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Beranda</a></li>
+                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="#analisis">Analisis Trading</a></li>
+                    <li><a href="#xauusd">XAU/USD</a></li>
+                    <li><a href="#news">News & Money Management</a></li>
+                    <li><a href="#join">Bergabung</a></li>
+                </ul>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Bergabunglah dengan Komunitas Trading Telegram RynFX Trader</h2>
+            <p>Dapatkan sinyal trading berkualitas, analisis teknikal & fundamental, serta edukasi money management untuk Forex dan XAU/USD (Gold). Tingkatkan profitabilitas trading Anda bersama trader profesional.</p>
+            <a href="https://t.me/rynfxtrader" target="_blank" class="cta-button telegram-button">
+                <i class="fab fa-telegram"></i> Join Grup Telegram
+            </a>
+            <a href="#about" class="cta-button">Pelajari Lebih Lanjut</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tentang RynFX Trader</h2>
+                <p>Komunitas trading Telegram yang berfokus pada edukasi dan sinyal trading untuk Forex dan XAU/USD dengan pendekatan profesional.</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Mengapa Memilih RynFX Trader?</h3>
+                    <p>RynFX Trader adalah komunitas trading yang menyediakan analisis pasar, sinyal trading, dan edukasi lengkap untuk trader semua level. Kami menggabungkan analisis teknikal, fundamental, dan manajemen risiko untuk meningkatkan probabilitas profit jangka panjang.</p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-signal"></i>
+                            </div>
+                            <div>
+                                <h4>Sinyal Trading Berkualitas</h4>
+                                <p>Sinyal dengan risk-reward ratio yang baik dan konfirmasi dari beberapa indikator teknikal.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div>
+                                <h4>Analisis Mendalam</h4>
+                                <p>Analisis teknikal dan fundamental harian untuk Forex dan XAU/USD (Gold).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div>
+                                <h4>Edukasi Lengkap</h4>
+                                <p>Materi edukasi dari dasar hingga advanced tentang trading dan money management.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Trading Analysis">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analisis Trading Section -->
+    <section id="analisis" style="background-color: #f1f5f9;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Analisis Trading</h2>
+                <p>Kami menggunakan kombinasi analisis teknikal dan fundamental untuk mengidentifikasi peluang trading terbaik.</p>
+            </div>
+            
+            <div class="trading-grid">
+                <div class="trading-card">
+                    <h3><i class="fas fa-chart-line"></i> Analisis Teknikal</h3>
+                    <p>Menggunakan indikator dan pola chart untuk mengidentifikasi tren, support & resistance, serta titik entry dan exit yang optimal.</p>
+                    <ul style="margin-top: 15px; padding-left: 20px;">
+                        <li>Analisis multi-timeframe</li>
+                        <li>Konfirmasi dengan beberapa indikator</li>
+                        <li>Identifikasi pola candlestick</li>
+                        <li>Penentuan level Support & Resistance</li>
+                    </ul>
+                </div>
+                
+                <div class="trading-card">
+                    <h3><i class="fas fa-newspaper"></i> Analisis Fundamental</h3>
+                    <p>Memantau berita ekonomi, data makro, dan kebijakan bank sentral yang mempengaruhi pergerakan pasar Forex dan emas.</p>
+                    <ul style="margin-top: 15px; padding-left: 20px;">
+                        <li>Analisis berita ekonomi global</li>
+                        <li>Pengaruh kebijakan bank sentral</li>
+                        <li>Data inflasi dan suku bunga</li>
+                        <li>Geopolitical events impact</li>
+                    </ul>
+                </div>
+                
+                <div class="trading-card">
+                    <h3><i class="fas fa-bullseye"></i> Strategi Trading</h3>
+                    <p>Menerapkan strategi trading yang teruji dengan risk management ketat untuk menjaga konsistensi profit jangka panjang.</p>
+                    <ul style="margin-top: 15px; padding-left: 20px;">
+                        <li>Risk-reward ratio minimum 1:2</li>
+                        <li>Position sizing yang tepat</li>
+                        <li>Stop loss dan take profit otomatis</li>
+                        <li>Diversifikasi portofolio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- XAU/USD Section -->
+    <section id="xauusd">
+        <div class="container">
+            <div class="section-title">
+                <h2>Analisis XAU/USD (Gold)</h2>
+                <p>Emas (XAU/USD) adalah salah instrumen safe-haven favorit trader. Kami memberikan analisis khusus untuk trading emas.</p>
+            </div>
+            
+            <div class="xau-grid">
+                <div class="xau-chart">
+                    <h3>Analisis Harga XAU/USD</h3>
+                    <div class="chart-placeholder">
+                        <div>
+                            <i class="fas fa-chart-area" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                            <p>Chart XAU/USD Live Analysis</p>
+                            <p style="font-size: 0.9rem; margin-top: 5px;">(Updated daily in our Telegram group)</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p><strong>Analisis Terkini:</strong> Emas saat ini bergerak dalam range konsolidasi setelah reli signifikan. Level resistance kunci berada di $1,950, sementara support kuat di $1,900. Kami memantau breakout dengan konfirmasi volume.</p>
+                    </div>
+                </div>
+                
+                <div class="xau-info">
+                    <h3>Keunggulan Trading XAU/USD</h3>
+                    <ul>
+                        <li>Safe-haven asset selama ketidakpastian ekonomi</li>
+                        <li>Likuiditas tinggi dan spread kompetitif</li>
+                        <li>Responsif terhadap geopolitik dan data inflasi</li>
+                        <li>Pergerakan trending yang jelas</li>
+                        <li>Analisis teknikal yang efektif</li>
+                        <li>Diversifikasi portofolio yang baik</li>
+                    </ul>
+                    
+                    <div style="margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                        <p><strong>Tip Trading Emas:</strong> Pantau data USD dan suku bunga Fed karena memiliki korelasi negatif dengan harga emas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Money Management Section -->
+    <section id="news" style="background-color: #f1f5f9;">
+        <div class="container">
+            <div class="section-title">
+                <h2>News Analysis & Money Management</h2>
+                <p>Kunci trading sukses: memahami berita pasar dan mengelola risiko dengan disiplin.</p>
+            </div>
+            
+            <div class="news-mgmt-grid">
+                <div class="news-card">
+                    <h3><i class="fas fa-newspaper"></i> Fundamental News Analysis</h3>
+                    <p>Kami memberikan analisis berita ekonomi yang berdampak pada pasar Forex dan emas:</p>
+                    
+                    <div class="news-item">
+                        <div class="news-date">High Impact: Setiap Hari</div>
+                        <h4>Economic Calendar Analysis</h4>
+                        <p>Analisis pra dan pasca rilis data penting seperti NFP, CPI, suku bunga bank sentral.</p>
+                    </div>
+                    
+                    <div class="news-item">
+                        <div class="news-date">Medium Impact: Mingguan</div>
+                        <h4>Central Bank Policies</h4>
+                        <p>Pengaruh kebijakan Fed, ECB, BoE, dan bank sentral utama terhadap pasar.</p>
+                    </div>
+                    
+                    <div class="news-item">
+                        <div class="news-date">Continuous Monitoring</div>
+                        <h4>Geopolitical Events</h4>
+                        <p>Dampak ketegangan geopolitik, perang dagang, dan krisis ekonomi terhadap safe-haven assets.</p>
+                    </div>
+                </div>
+                
+                <div class="mgmt-card">
+                    <h3><i class="fas fa-wallet"></i> Money Management System</h3>
+                    <p>Disiplin manajemen risiko adalah kunci survival di pasar forex. Sistem kami meliputi:</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4><i class="fas fa-percentage" style="color: var(--accent);"></i> Risk Per Trade: 1-2%</h4>
+                        <p>Jangan pernah risiko lebih dari 2% dari modal pada satu trading position.</p>
+                        
+                        <h4 style="margin-top: 20px;"><i class="fas fa-balance-scale" style="color: var(--accent);"></i> Risk-Reward Ratio Minimum 1:2</h4>
+                        <p>Target profit minimal 2x dari risiko yang diambil untuk menjaga profitabilitas jangka panjang.</p>
+                        
+                        <h4 style="margin-top: 20px;"><i class="fas fa-chart-pie" style="color: var(--accent);"></i> Portfolio Diversification</h4>
+                        <p>Sebar risiko pada beberapa instrumen (forex pairs, gold, indices) untuk mengurangi exposure.</p>
+                        
+                        <h4 style="margin-top: 20px;"><i class="fas fa-stopwatch" style="color: var(--accent);"></i> Stop Loss Discipline</h4>
+                        <p>Selalu gunakan stop loss dan jangan pernah memindahkannya kecuali untuk trail profit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Section -->
+    <section class="join" id="join">
+        <div class="container">
+            <h2>Bergabung dengan RynFX Trader Sekarang</h2>
+            <p>Dapatkan akses ke sinyal trading, analisis pasar harian, edukasi, dan komunitas trader profesional. Tingkatkan pengetahuan dan hasil trading Anda bersama kami.</p>
+            
+            <div style="max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 10px;">
+                <h3 style="margin-bottom: 1.5rem; color: white;">Apa yang Anda Dapatkan:</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span>Sinyal Trading Harian</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span>Analisis XAU/USD & Forex</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span>News & Fundamental Analysis</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span>Money Management Guidance</span>
+                    </div>
+                </div>
+                
+                <a href="https://t.me/rynfxtrader" target="_blank" class="cta-button telegram-button" style="background-color: white; color: var(--primary); font-size: 1.2rem; padding: 1rem 3rem;">
+                    <i class="fab fa-telegram"></i> Join Telegram Group Sekarang
+                </a>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">Grup Telegram • Update Harian • Gratis Bergabung</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>RynFX Trader</h3>
+                    <p>Komunitas trading Telegram profesional yang berfokus pada edukasi, analisis pasar, dan sinyal trading untuk Forex dan XAU/USD.</p>
+                    <div class="social-links">
+                        <a href="https://t.me/rynfxtrader" target="_blank"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#about">Tentang Kami</a></li>
+                        <li><a href="#analisis">Analisis Trading</a></li>
+                        <li><a href="#xauusd">XAU/USD Analysis</a></li>
+                        <li><a href="#news">News & Money Management</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Kontak & Disclaimer</h3>
+                    <p><strong>Telegram Group:</strong> <a href="https://t.me/rynfxtrader" style="color: var(--accent);">@rynfxtrader</a></p>
+                    <p><small>Trading forex dan emas mengandung risiko kerugian. Hasil sebelumnya tidak menjamin hasil di masa depan. Edukasi dan pengelolaan risiko yang tepat sangat penting.</small></p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 RynFX Trader. All rights reserved. | Designed for Trading Community</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if(window.innerWidth <= 768) {
+                        document.querySelector('.nav-links').style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        // Update copyright year
+        document.querySelector('.copyright p').innerHTML = document.querySelector('.copyright p').innerHTML.replace('2023', new Date().getFullYear());
+    </script>
+</body>
+</html>
